@@ -12,7 +12,6 @@ const MEMO_PROGRAM_ID = new PublicKey(
 );
 
 const AUTH_STORAGE_PREFIX = "umbral-phantom-auth:";
-const LEGACY_AUTH_PREFIX = "egoshot-phantom-auth:";
 
 /** Phantom browser extension installed (popup connect only works with this). */
 export function isPhantomInstalled(): boolean {
@@ -27,10 +26,7 @@ export function phantomInstallHint(): string {
 
 export function isPhantomAuthorized(wallet: string): boolean {
   if (typeof window === "undefined") return false;
-  if (localStorage.getItem(`${AUTH_STORAGE_PREFIX}${wallet}`) === "1") {
-    return true;
-  }
-  return localStorage.getItem(`${LEGACY_AUTH_PREFIX}${wallet}`) === "1";
+  return localStorage.getItem(`${AUTH_STORAGE_PREFIX}${wallet}`) === "1";
 }
 
 function markPhantomAuthorized(wallet: string): void {
@@ -41,7 +37,6 @@ function markPhantomAuthorized(wallet: string): void {
 export function clearPhantomAuthorized(wallet: string): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(`${AUTH_STORAGE_PREFIX}${wallet}`);
-  localStorage.removeItem(`${LEGACY_AUTH_PREFIX}${wallet}`);
 }
 
 function buildRegistrationMessage(wallet: string): Uint8Array {

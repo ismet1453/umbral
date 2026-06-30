@@ -1,7 +1,6 @@
 import type { Locale } from "@/lib/i18n/types";
 
 export const LOCALE_STORAGE_KEY = "umbral-locale";
-const LEGACY_LOCALE_KEY = "egoshot-locale";
 
 const VALID: Locale[] = [
   "tr",
@@ -22,9 +21,7 @@ export function isLocale(value: string): value is Locale {
 
 export function loadStoredLocale(): Locale | null {
   if (typeof window === "undefined") return null;
-  const raw =
-    localStorage.getItem(LOCALE_STORAGE_KEY) ??
-    localStorage.getItem(LEGACY_LOCALE_KEY);
+  const raw = localStorage.getItem(LOCALE_STORAGE_KEY);
   return raw && isLocale(raw) ? raw : null;
 }
 

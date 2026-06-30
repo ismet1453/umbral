@@ -79,13 +79,6 @@ export const BOSS_MAX_HP = 1000;
 export const COMMON_CHEST_COST = 150;
 export const PROFILE_PREFIX = "umbral-profile";
 export const SESSION_KEY = "umbral-session";
-/** @deprecated legacy EgoShot keys — read-only migration */
-const LEGACY_PROFILE_PREFIX = "egoshot-shadow-profile";
-const LEGACY_SESSION_KEY = "egoshot-shadow-session";
-
-/** One-time per-wallet migration: reset combat progress to L1 (balance test). */
-export const MIGRATION_LEVEL_RESET_V1 = "umbral-migration:level-reset-v1";
-const LEGACY_MIGRATION_LEVEL_RESET_V1 = "egoshot-migration:level-reset-v1";
 
 /** How many mobs are slain before a boss appears. */
 export const BOSS_EVERY = 10;
@@ -124,18 +117,8 @@ export const CHARACTERS: Record<CharacterId, CharacterDef> = {
   },
 };
 
-const LEGACY_CHARACTER_IDS = new Set([
-  "valeria",
-  "yue",
-  "isolde",
-  "alara",
-  "infantry",
-  "igris",
-  "jinwoo",
-]);
-
-function normalizeCharacterId(id: string): CharacterId {
-  return LEGACY_CHARACTER_IDS.has(id) ? "varek" : "varek";
+function normalizeCharacterId(_id: string): CharacterId {
+  return "varek";
 }
 
 function normalizeLevel(level: number): number {
@@ -439,30 +422,6 @@ export function resetCombatProgress(profile: PlayerProfile): PlayerProfile {
   return { ...staged, ...spawn };
 }
 
-function migrationKey(wallet: string): string {
-  return `${MIGRATION_LEVEL_RESET_V1}:${wallet}`;
-}
-
-function legacyMigrationDone(wallet: string): boolean {
-  if (typeof window === "undefined") return false;
-  return (
-    localStorage.getItem(migrationKey(wallet)) === "1" ||
-    localStorage.getItem(`${LEGACY_MIGRATION_LEVEL_RESET_V1}:${wallet}`) === "1"
-  );
-}
-
-function applyProfileMigrations(
-  wallet: string,
-  profile: PlayerProfile
-): PlayerProfile {
-  if (typeof window === "undefined") return profile;
-  if (legacyMigrationDone(wallet)) return profile;
-  localStorage.setItem(migrationKey(wallet), "1");
-  const reset = resetCombatProgress(profile);
-  persistProfile(reset);
-  return reset;
-}
-
 /**
  * UMBRAL: NO offline / AFK earnings. The game must stay open to earn.
  * Reopening only resets the accrual clock so no catch-up is ever granted.
@@ -556,10 +515,7 @@ export function formatGold(n: number): string {
 export function loadProfile(wallet: string): PlayerProfile | null {
   if (typeof window === "undefined") return null;
   try {
-    let raw = localStorage.getItem(`${PROFILE_PREFIX}:${wallet}`);
-    if (!raw) {
-      raw = localStorage.getItem(`${LEGACY_PROFILE_PREFIX}:${wallet}`);
-    }
+    const raw = localStorage.getItem(`${PROFILE_PREFIX}:${wallet}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<PlayerProfile>;
     const level = normalizeLevel(parsed.level ?? 1);
@@ -644,10 +600,10 @@ export function loadProfile(wallet: string): PlayerProfile | null {
       typeof parsed.enemyKind === "undefined"
     ) {
       const spawn = spawnNextEnemy(base);
-      return applyProfileMigrations(wallet, { ...base, ...spawn });
+      return { ...base, ...spawn };
     }
 
-    return applyProfileMigrations(wallet, base);
+    return base;
   } catch {
     return null;
   }
@@ -663,10 +619,7 @@ export function persistProfile(profile: PlayerProfile): void {
 
 export function loadSessionWallet(): string | null {
   if (typeof window === "undefined") return null;
-  return (
-    localStorage.getItem(SESSION_KEY) ??
-    localStorage.getItem(LEGACY_SESSION_KEY)
-  );
+  return localStorage.getItem(SESSION_KEY);
 }
 
 export function persistSessionWallet(wallet: string | null): void {

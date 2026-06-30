@@ -12,6 +12,13 @@ npm run dev
 
 Open http://localhost:3000
 
+Or from repo root:
+
+```bash
+npm install
+npm run dev
+```
+
 ## Deploy (Vercel)
 
 Set **Root Directory** to `frontend`, then:
@@ -23,10 +30,8 @@ npx vercel --prod
 
 Optional env: `NEXT_PUBLIC_FIREBASE_*` (see `frontend/.env.example`).
 
-## Monorepo layout
+## Layout
 
 | Folder | Purpose |
 |--------|---------|
-| `frontend/` | **UMBRAL** game (Next.js) — ship this |
-| `backend/` | Legacy PvP server (not used by idle v1) |
-| `anchor/` | Legacy Solana escrow (not used by idle v1) |
+| `frontend/` | **UMBRAL** game (Next.js) |

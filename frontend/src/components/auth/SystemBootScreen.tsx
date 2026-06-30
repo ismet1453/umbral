@@ -19,13 +19,11 @@ const FAKE_LOGS = [
   "Bypassing standard hunter protocol...",
   "Injecting Shadow Monarch logic array...",
   "Solana devnet latency: 38ms",
-  "Checking smart-contract escrow state...",
   "Loading shadow registry...",
   "Verifying cryptographic proof of rank...",
   "Boot sector integrity: PASS",
   "Allocating monarch memory buffer...",
   "Linking to Gate dimensional coordinates...",
-  "Network handshake with backend node...",
   "Player cache hydrated: 0 records",
 ];
 

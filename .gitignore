@@ -6,11 +6,6 @@ node_modules/
 .env.local
 .env.*.local
 
-# Anchor / Rust
-anchor/target/
-anchor/.anchor/
-**/*.rs.bk
-
 # Next.js
 frontend/.next/
 frontend/out/
