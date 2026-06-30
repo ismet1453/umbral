@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling: System Notification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Arka Plan ve Genel Efektler */
+        body {
+            background-color: #020617;
+            background-image: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Yükleme Ekranı İmleci */
+        .blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Görseldeki Solo Leveling Panel Tasarımı */
+        .system-panel {
+            background: rgba(4, 15, 35, 0.85);
+            border: 1px solid #1e3a8a;
+            position: relative;
+            backdrop-filter: blur(8px);
+            /* Ortadan açılma animasyonu için başlangıç durumu */
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+        }
+        .system-panel.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Üst ve Alt Kalın Parlayan Çizgiler */
+        .panel-border-top {
+            position: absolute;
+            top: -4px; left: -10px; right: -10px; height: 6px;
+            background: linear-gradient(90deg, transparent, #3b82f6, #60a5fa, #3b82f6, transparent);
+            box-shadow: 0 0 15px #3b82f6, 0 0 30px #60a5fa;
+        }
+        .panel-border-bottom {
+            position: absolute;
+            bottom: -4px; left: -10px; right: -10px; height: 6px;
+            background: linear-gradient(90deg, transparent, #3b82f6, #60a5fa, #3b82f6, transparent);
+            box-shadow: 0 0 15px #3b82f6, 0 0 30px #60a5fa;
+        }
+
+        /* Input Tasarımı */
+        .neon-input {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .neon-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            border-color: #60a5fa;
+        }
+
+        /* Buton Tasarımları */
+        .sys-btn {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .sys-btn:hover {
+            background: rgba(30, 58, 138, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+            color: #fff;
+            transform: scale(1.02);
+        }
+
+        /* Sıralı Görünme (Fade-in) Animasyonları */
+        .delay-1 { opacity: 0; animation: fadeIn 1s ease forwards 0.5s; }
+        .delay-2 { opacity: 0; animation: fadeIn 1s ease forwards 2s; }
+        .delay-3 { opacity: 0; animation: fadeIn 1s ease forwards 3.5s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden select-none flex items-center justify-center">
+
+    <!-- 1. YÜKLEME EKRANI (BOOT SCREEN) -->
+    <div id="boot-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-1000">
+        <div class="max-w-md w-full px-6 text-blue-400 font-mono text-sm leading-relaxed">
+            <span id="boot-text"></span><span class="blink inline-block w-2 h-4 bg-blue-500 ml-1 translate-y-1"></span>
+        </div>
+    </div>
+
+    <!-- 2. ANA SİSTEM BİLDİRİM PANELİ -->
+    <div id="system-container" class="hidden w-full max-w-2xl px-4 relative z-10">
+        
+        <!-- Ana Panel Kutusu -->
+        <div id="notification-panel" class="system-panel p-8 md:p-12 shadow-[0_0_50px_rgba(30,58,138,0.3)]">
+            <div class="panel-border-top"></div>
+            
+            <!-- Başlık: NOTIFICATION -->
+            <div class="flex items-center justify-center space-x-3 mb-8 border-b border-blue-900/50 pb-4 delay-1">
+                <!-- Ünlem İkonu -->
+                <div class="w-8 h-8 rounded-full border-2 border-blue-400 flex items-center justify-center text-blue-400 font-bold text-lg shadow-[0_0_10px_rgba(59,130,246,0.5)]">!</div>
+                <h1 class="text-2xl md:text-3xl font-light tracking-[0.2em] text-blue-100 uppercase" style="text-shadow: 0 0 10px rgba(147, 197, 253, 0.5);">Notification</h1>
+            </div>
+
+            <!-- Soru Metni -->
+            <div class="text-center mb-8 delay-2">
+                <p class="text-xl md:text-2xl text-blue-200 font-medium tracking-wide">
+                    Are you sure you want to join the game?
+                </p>
+                <div class="mt-2 text-xs text-blue-500/70 font-mono tracking-widest uppercase">
+                    [Penalty Quest: Survival]
+                </div>
+            </div>
+
+            <!-- Kayıt Paneli ve Cüzdan (Sonradan belirir) -->
+            <div class="delay-3 flex flex-col items-center w-full max-w-md mx-auto space-y-6">
+                
+                <!-- Canlı Güncellenen Metin -->
+                <div class="text-center h-6">
+                    <span id="dynamic-greeting" class="text-blue-300 font-mono tracking-widest text-sm">Waiting for player identification...</span>
+                </div>
+
+                <!-- İsim Girişi -->
+                <div class="w-full relative">
+                    <input type="text" id="player-name" maxlength="12" autocomplete="off" placeholder="ENTER PLAYER NAME" 
+                           class="neon-input w-full py-3 px-4 text-xl font-bold tracking-widest uppercase placeholder-blue-900/50">
+                    <div class="absolute right-2 top-3 text-[10px] text-blue-500 font-mono"><span id="char-count">0</span>/12</div>
+                </div>
+
+                <!-- Aksiyon Butonları -->
+                <div class="w-full space-y-3 pt-4 border-t border-blue-900/30">
+                    <button id="btn-wallet" class="sys-btn w-full py-3 flex items-center justify-center space-x-2 font-bold text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                        <span>CONNECT SOLANA WALLET</span>
+                    </button>
+                    
+                    <div class="flex space-x-4 w-full">
+                        <button id="btn-yes" class="sys-btn w-1/2 py-2 font-bold text-sm">YES</button>
+                        <button id="btn-no" class="sys-btn w-1/2 py-2 font-bold text-sm border-red-900/50 text-red-400 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:bg-red-900/20">NO</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-border-bottom"></div>
+        </div>
+    </div>
+
+    <!-- MANTIK VE ANİMASYON KODLARI -->
+    <script>
+        // 1. DAKTİLO EFEKTİ (BOOT)
+        const bootTextSource = "System connecting to Solana Mainnet...\nVerifying hidden conditions...\n[System Notification] triggered.";
+        let index = 0;
+        const bootTextElement = document.getElementById("boot-text");
+
+        function typeEffect() {
+            if (index < bootTextSource.length) {
+                if (bootTextSource.charAt(index) === '\n') {
+                    bootTextElement.innerHTML += '<br><br>';
+                } else {
+                    bootTextElement.innerHTML += bootTextSource.charAt(index);
+                }
+                index++;
+                setTimeout(typeEffect, 40);
+            } else {
+                // Yazı bittikten 1.5 saniye sonra paneli aç
+                setTimeout(showSystemPanel, 1500);
+            }
+        }
+
+        // 2. PANELİ ORTADAN AÇMA
+        function showSystemPanel() {
+            const bootScreen = document.getElementById("boot-screen");
+            const systemContainer = document.getElementById("system-container");
+            const panel = document.getElementById("notification-panel");
+
+            // Siyah ekranı karartarak yavaşça yok et
+            bootScreen.style.opacity = "0";
+            
+            setTimeout(() => {
+                bootScreen.style.display = "none";
+                systemContainer.classList.remove("hidden");
+                
+                // Gecikmeli olarak Panel'e .active class'ı ekleyip scale(1) ile büyütüyoruz
+                setTimeout(() => {
+                    panel.classList.add("active");
+                }, 100);
+                
+                // CSS'teki delay-3 animasyonu bitince inputa otomatik odaklansın
+                setTimeout(() => {
+                    document.getElementById("player-name").focus();
+                }, 4500);
+
+            }, 1000);
+        }
+
+        // Sayfa yüklenince daktiloyu başlat
+        window.onload = () => setTimeout(typeEffect, 500);
+
+        // 3. İSİM YAZMA VE CANLI GÜNCELLEME (MAX 12 HANE)
+        const nameInput = document.getElementById("player-name");
+        const greetingText = document.getElementById("dynamic-greeting");
+        const charCount = document.getElementById("char-count");
+
+        nameInput.addEventListener("input", (e) => {
+            // Sadece İngilizce A-Z ve rakamlara izin ver
+            let val = e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            e.target.value = val;
+            
+            charCount.innerText = val.length;
+
+            if (val.length > 0) {
+                greetingText.innerHTML = `Hello, <span class="text-white font-bold">${val}</span>!`;
+            } else {
+                greetingText.innerHTML = `Waiting for player identification...`;
+            }
+        });
+
+        // 4. BUTON AKSİYONLARI (Simülasyon)
+        document.getElementById("btn-wallet").addEventListener("click", () => {
+            alert("Connecting to Phantom/Solflare...");
+        });
+
+        document.getElementById("btn-yes").addEventListener("click", () => {
+            const playerName = nameInput.value.trim();
+            if(!playerName) {
+                nameInput.style.borderColor = "red";
+                setTimeout(() => nameInput.style.borderColor = "#3b82f6", 1000);
+                return;
+            }
+            alert(`[System]: Player ${playerName} accepted the quest. Initiating transfer...`);
+        });
+
+        document.getElementById("btn-no").addEventListener("click", () => {
+            alert("[System]: Quest declined. Player status: DECEASED.");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "umbral",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "predev": "node scripts/predev.mjs",
+    "dev": "concurrently -k -n backend,frontend -c blue,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "dev:stop": "node scripts/stop-dev.mjs",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "private": "true",
+  "workspaces": [
+    "anchor",
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}

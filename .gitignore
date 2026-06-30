@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Anchor / Rust
+anchor/target/
+anchor/.anchor/
+**/*.rs.bk
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/

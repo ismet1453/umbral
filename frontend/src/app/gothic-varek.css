@@ -1,0 +1,676 @@
+/* ═══════════════════════════════════════════════════════════
+   VAREK — Gothic iron & chiseled stone UI overrides
+   Replaces cyberpunk neon glass with ancient cathedral craft
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --vk-stone-deep: #141210;
+  --vk-stone: #252220;
+  --vk-stone-mid: #322e2a;
+  --vk-stone-lit: #454039;
+  --vk-iron: #4a4238;
+  --vk-iron-rust: #6b4a32;
+  --vk-iron-patina: #3d4a42;
+  --vk-gold: #9a7d4e;
+  --vk-gold-lit: #c4a574;
+  --vk-blood: #6b2a2a;
+  --vk-blood-lit: #8b3a3a;
+  --vk-parchment: #c8bdb0;
+  --vk-parchment-dim: #7a7268;
+  --vk-ember: #8b4518;
+
+  --vk-stone-face:
+    linear-gradient(165deg, rgba(72, 66, 58, 0.92) 0%, rgba(38, 34, 30, 0.97) 42%, rgba(22, 20, 18, 1) 100%),
+    repeating-linear-gradient(
+      92deg,
+      transparent 0,
+      transparent 4px,
+      rgba(0, 0, 0, 0.035) 4px,
+      rgba(0, 0, 0, 0.035) 5px
+    );
+  --vk-iron-face:
+    linear-gradient(180deg, #4a4238 0%, #2e2822 38%, #1e1a16 100%);
+  --vk-chisel-top: inset 0 1px 0 rgba(255, 248, 235, 0.09);
+  --vk-chisel-bottom: inset 0 -3px 8px rgba(0, 0, 0, 0.55);
+  --vk-bevel-border: 3px solid #3a342e;
+  --vk-panel-outer:
+    0 8px 24px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(0, 0, 0, 0.85),
+    0 0 0 4px rgba(58, 52, 46, 0.35);
+
+  /* Remap legacy neon tokens → gothic */
+  --sl-bg: var(--vk-stone-deep);
+  --sl-panel: rgba(32, 28, 24, 0.96);
+  --sl-purple: var(--vk-iron-rust);
+  --sl-purple-dim: rgba(74, 58, 42, 0.65);
+  --sl-cyan: var(--vk-gold-lit);
+  --sl-cyan-dim: rgba(154, 125, 78, 0.35);
+  --sl-silver: var(--vk-parchment);
+  --sl-gold: var(--vk-gold-lit);
+}
+
+body {
+  font-family: var(--font-body), "EB Garamond", Garamond, Georgia, serif;
+  color: var(--vk-parchment);
+  background: var(--vk-stone-deep);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(58, 48, 38, 0.22), transparent 55%),
+    linear-gradient(180deg, #0e0c0a 0%, var(--vk-stone-deep) 100%);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), "Cinzel", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ── Stone panel primitive (all game glass) ── */
+.sl-glass,
+.um-main .sl-glass,
+.sl-dungeon--war .sl-glass {
+  border: var(--vk-bevel-border);
+  border-top-color: #5c5448;
+  border-left-color: #5c5448;
+  border-bottom-color: #1a1714;
+  border-right-color: #1a1714;
+  background: var(--vk-stone-face);
+  backdrop-filter: none;
+  border-radius: 2px;
+  clip-path: none;
+  box-shadow: var(--vk-panel-outer), var(--vk-chisel-top), var(--vk-chisel-bottom);
+}
+
+.sl-glass::before,
+.um-main .sl-glass::before,
+.sl-dungeon--war .sl-glass::before {
+  background:
+    linear-gradient(180deg, rgba(255, 248, 235, 0.04) 0%, transparent 28%),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(90, 78, 62, 0.12), transparent 70%);
+  opacity: 1;
+}
+
+/* ── Stats panel ── */
+.sl-stats-panel__title,
+.sl-loot__title {
+  font-family: var(--font-display), Cinzel, serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  color: var(--vk-gold-lit);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(74, 58, 42, 0.45);
+  padding-bottom: 0.45rem;
+}
+
+.sl-stats-panel__meta,
+.sl-loot__sub,
+.sl-loot__balance,
+.sl-chest__desc {
+  font-family: var(--font-body), serif;
+  color: var(--vk-parchment-dim);
+  font-style: italic;
+}
+
+.sl-stat-row__key {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold);
+  letter-spacing: 0.18em;
+  text-shadow: none;
+}
+
+.sl-stat-row__val {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.sl-stat-row__bar {
+  background: rgba(12, 10, 8, 0.85);
+  border: 1px solid rgba(58, 52, 46, 0.8);
+  border-radius: 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.sl-stat-row__fill {
+  background: linear-gradient(90deg, #5c3a28, var(--vk-gold), #8b6914);
+  box-shadow: inset 0 1px 0 rgba(255, 235, 200, 0.15);
+}
+
+/* ── Loot / chests ── */
+.sl-chest {
+  border: 2px solid #3a342e;
+  border-top-color: #524a40;
+  background: var(--vk-iron-face);
+  box-shadow: var(--vk-chisel-top), var(--vk-chisel-bottom);
+}
+
+.sl-chest__icon {
+  background: linear-gradient(180deg, #3a342e, #1e1a16);
+  border: 2px solid #5c5448;
+  border-radius: 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.sl-chest__icon::after {
+  color: var(--vk-gold-lit);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  font-family: var(--font-display), Cinzel, serif;
+}
+
+.sl-chest__icon--boss {
+  border-color: var(--vk-gold);
+  background: linear-gradient(180deg, #4a3820, #2a2010);
+}
+
+.sl-chest__icon--boss::after {
+  color: var(--vk-gold-lit);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.sl-chest__name {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+}
+
+.sl-chest__btn {
+  font-family: var(--font-display), Cinzel, serif;
+  border: 2px solid #4a4238;
+  border-top-color: #6b5c4a;
+  background: linear-gradient(180deg, #3a342e, #221e1a);
+  color: var(--vk-gold-lit);
+  letter-spacing: 0.14em;
+  box-shadow: var(--vk-chisel-top), 0 2px 6px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+}
+
+.sl-chest__btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #4a4238, #2e2822);
+  border-color: var(--vk-gold);
+  box-shadow: var(--vk-chisel-top), 0 3px 10px rgba(0, 0, 0, 0.55);
+}
+
+.sl-chest__btn--boss {
+  border-color: var(--vk-gold);
+  color: var(--vk-gold-lit);
+}
+
+.sl-loot__reward {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  color: var(--vk-gold-lit);
+}
+
+/* ── War layout: level, gold, crit ── */
+.sl-war-level__label,
+.sl-war-gain__label,
+.sl-war-crit__label {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+  letter-spacing: 0.24em;
+  text-shadow: none;
+}
+
+.sl-war-level__value,
+.sl-war-gain__value {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold-lit);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+}
+
+.sl-war-level__max,
+.sl-war-gain__rate,
+.sl-war-crit__hint {
+  font-family: var(--font-body), serif;
+  color: var(--vk-parchment-dim);
+}
+
+.sl-war-crit__value {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+}
+
+.sl-war-level__boss {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-blood-lit);
+  letter-spacing: 0.1em;
+}
+
+/* XP bar — carved stone groove */
+.sl-xp-bar {
+  border-radius: 0;
+  background: rgba(10, 8, 6, 0.95);
+  border: 2px solid #2a2420;
+  border-top-color: #1a1714;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.75);
+  height: 9px;
+}
+
+.sl-xp-bar__fill {
+  border-radius: 0;
+  background: linear-gradient(90deg, #5c3a28, var(--vk-gold), #a68b5b);
+  box-shadow: inset 0 1px 0 rgba(255, 235, 200, 0.2);
+}
+
+/* ── Enemy HUD ── */
+.sl-war-enemy {
+  border: 2px solid #3a342e !important;
+  border-top-color: #524a40 !important;
+  background: var(--vk-stone-face) !important;
+  box-shadow: var(--vk-panel-outer), var(--vk-chisel-bottom) !important;
+}
+
+.sl-war-enemy--boss {
+  border-color: var(--vk-blood-lit) !important;
+  box-shadow:
+    var(--vk-panel-outer),
+    inset 0 0 20px rgba(80, 20, 20, 0.15) !important;
+}
+
+.sl-war-enemy__badge {
+  font-family: var(--font-display), Cinzel, serif;
+  border-radius: 0;
+}
+
+.sl-war-enemy__badge--mob {
+  color: var(--vk-parchment);
+  background: rgba(40, 48, 44, 0.6);
+  border: 1px solid #4a5248;
+  text-shadow: none;
+}
+
+.sl-war-enemy__badge--boss {
+  color: #e8c8b8;
+  background: rgba(80, 24, 24, 0.55);
+  border: 1px solid var(--vk-blood-lit);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.sl-war-enemy__name {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.sl-war-enemy__hp {
+  border-radius: 0;
+  background: rgba(8, 6, 4, 0.95);
+  border: 2px solid #2a2420;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.sl-war-enemy__hp-fill {
+  border-radius: 0;
+  background: linear-gradient(90deg, #4a1818, var(--vk-blood-lit), #8b4040);
+  box-shadow: inset 0 1px 0 rgba(255, 200, 180, 0.12);
+}
+
+/* ── Hero frame — iron reliquary, not neon portal ── */
+.sl-war-hero__glow {
+  background: radial-gradient(
+    ellipse 70% 80% at 50% 55%,
+    rgba(90, 68, 42, 0.25),
+    transparent 70%
+  );
+}
+
+.sl-war-hero__frame {
+  border: 4px solid #3a342e;
+  border-top-color: #6b5c4a;
+  border-left-color: #5c5448;
+  border-bottom-color: #1a1714;
+  border-right-color: #1a1714;
+  background:
+    linear-gradient(180deg, rgba(42, 38, 34, 0.95) 0%, rgba(18, 16, 14, 0.98) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 8px,
+      rgba(0, 0, 0, 0.04) 8px,
+      rgba(0, 0, 0, 0.04) 9px
+    );
+  box-shadow:
+    var(--vk-panel-outer),
+    var(--vk-chisel-top),
+    var(--vk-chisel-bottom),
+    inset 0 0 40px rgba(0, 0, 0, 0.4);
+  clip-path: none;
+  border-radius: 2px;
+}
+
+.sl-war-hero__badge {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold);
+  letter-spacing: 0.22em;
+}
+
+.sl-war-hero__name {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold-lit);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.sl-war-hero__title {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  color: var(--vk-parchment-dim);
+}
+
+.sl-war-stage__title {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+  letter-spacing: 0.32em;
+}
+
+.sl-war-slash {
+  background: linear-gradient(90deg, transparent, #c4a574, #e8dcc8, #c4a574, transparent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  height: 3px;
+}
+
+/* ── Damage numbers ── */
+.sl-damage {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95);
+}
+
+.sl-damage--crit {
+  color: var(--vk-gold-lit);
+  text-shadow: 0 0 0 transparent, 0 2px 6px rgba(0, 0, 0, 0.95);
+}
+
+/* ── Claim button — iron altar slab ── */
+.sl-claim-bar {
+  background: linear-gradient(180deg, transparent, rgba(14, 12, 10, 0.92) 25%, rgba(10, 8, 6, 0.98));
+}
+
+.sl-btn-claim {
+  font-family: var(--font-display), Cinzel, serif;
+  border: 3px solid #4a4238;
+  border-top-color: #7a6a52;
+  border-left-color: #6b5c4a;
+  border-bottom-color: #1a1714;
+  border-right-color: #2a2420;
+  background: var(--vk-iron-face);
+  color: var(--vk-gold-lit);
+  letter-spacing: 0.2em;
+  clip-path: none;
+  border-radius: 2px;
+  box-shadow:
+    var(--vk-panel-outer),
+    var(--vk-chisel-top),
+    var(--vk-chisel-bottom);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.sl-btn-claim:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #524a40, #322e28, #221e1a);
+  border-top-color: var(--vk-gold);
+  box-shadow:
+    var(--vk-panel-outer),
+    var(--vk-chisel-top),
+    0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.sl-btn-claim__pulse {
+  display: none;
+}
+
+/* ── Level-up button (if present) ── */
+.sl-btn-awaken {
+  font-family: var(--font-display), Cinzel, serif;
+  border: 3px solid #4a4238;
+  border-top-color: #7a6a52;
+  background: linear-gradient(180deg, #3a3028, #1e1a16);
+  color: var(--vk-gold-lit);
+  clip-path: none;
+  border-radius: 2px;
+  box-shadow: var(--vk-panel-outer), var(--vk-chisel-bottom);
+}
+
+.sl-btn-awaken:hover:not(:disabled) {
+  border-top-color: var(--vk-gold);
+  box-shadow: var(--vk-panel-outer), var(--vk-chisel-top);
+}
+
+.sl-btn-awaken__glow {
+  display: none;
+}
+
+/* ── Boss drop toast ── */
+.sl-boss-drop-toast {
+  font-family: var(--font-display), Cinzel, serif;
+  border-radius: 2px;
+  border: 2px solid var(--vk-gold);
+  border-top-color: #d4b88a;
+  background: var(--vk-stone-face);
+  color: var(--vk-gold-lit);
+  box-shadow: var(--vk-panel-outer);
+}
+
+.sl-boss-drop-flash {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    rgba(154, 125, 78, 0.28) 0%,
+    rgba(60, 48, 32, 0.12) 40%,
+    transparent 75%
+  );
+}
+
+/* ── Umbral shell: drawer & rail as iron gates ── */
+.um-shell {
+  --um-ember: var(--vk-ember);
+  --um-purple: var(--vk-iron-rust);
+  --um-cream: var(--vk-parchment);
+  --um-panel: rgba(28, 24, 20, 0.96);
+}
+
+.um-drawer {
+  border-right: 3px solid #3a342e;
+  border-right-color: #2a2420;
+  background: var(--vk-iron-face);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.75), inset -4px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.um-drawer__toggle {
+  font-family: var(--font-display), Cinzel, serif;
+  border-bottom: 2px solid #2a2420;
+  background: linear-gradient(180deg, #3a342e, #221e1a);
+  color: var(--vk-gold-lit);
+  box-shadow: var(--vk-chisel-top), inset 0 -6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.um-drawer__toggle:hover {
+  background: linear-gradient(180deg, #4a4238, #2e2822);
+  box-shadow: var(--vk-chisel-top);
+}
+
+.um-drawer__toggle-icon {
+  filter: none;
+}
+
+.um-drawer__toggle-label {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+}
+
+.um-rail {
+  border-left: 3px solid #2a2420;
+  background: var(--vk-iron-face);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.75), inset 4px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.um-rail__btn {
+  font-family: var(--font-display), Cinzel, serif;
+  border-color: transparent;
+  color: var(--vk-parchment-dim);
+}
+
+.um-rail__btn:hover,
+.um-rail__btn--active {
+  background: rgba(58, 52, 46, 0.45);
+  color: var(--vk-gold-lit);
+  border-color: rgba(74, 58, 42, 0.5);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+}
+
+.um-rail__text {
+  font-family: var(--font-display), Cinzel, serif;
+  letter-spacing: 0.1em;
+}
+
+.um-topbar {
+  border-bottom: 2px solid rgba(58, 52, 46, 0.65);
+}
+
+.um-topbar__tag {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+  letter-spacing: 0.32em;
+}
+
+.um-topbar__title {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+.um-topbar__accent {
+  color: var(--vk-gold-lit);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.um-topbar__hunter-label {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+}
+
+.um-topbar__hunter-name {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold-lit);
+}
+
+/* ── Modals ── */
+.um-modal {
+  border: 3px solid #3a342e;
+  border-top-color: #5c5448;
+  border-radius: 2px;
+  background: var(--vk-stone-face);
+  box-shadow: var(--vk-panel-outer), var(--vk-chisel-bottom);
+}
+
+.um-modal__head {
+  border-bottom: 1px solid rgba(74, 58, 42, 0.55);
+}
+
+.um-modal__title {
+  font-family: var(--font-display), "Cinzel", Georgia, serif;
+  color: var(--vk-gold-lit);
+}
+
+.um-modal__close {
+  font-family: var(--font-display), "Cinzel", serif;
+  border: 2px solid #4a4238;
+  border-radius: 0;
+  background: var(--vk-iron-face);
+  color: var(--vk-parchment-dim);
+}
+
+.um-modal__close:hover {
+  color: var(--vk-gold-lit);
+  border-color: var(--vk-gold);
+}
+
+.um-varek-card {
+  border: 2px solid #3a342e;
+  background: var(--vk-stone-face);
+}
+
+.um-varek-card__name {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-gold-lit);
+}
+
+/* ── Legacy stat tiles (if shown) ── */
+.sl-stat__label {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment-dim);
+}
+
+.sl-stat__value {
+  font-family: var(--font-display), Cinzel, serif;
+  color: var(--vk-parchment);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.sl-stat__value--gold {
+  color: var(--vk-gold-lit);
+}
+
+.um-main .sl-stat__value--rank {
+  color: var(--vk-gold-lit);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.sl-char-avatar--varek {
+  border: 2px solid #5c5448;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Wallet button ── */
+.wallet-adapter-button {
+  background: var(--vk-iron-face) !important;
+  border: 2px solid #4a4238 !important;
+  border-top-color: #6b5c4a !important;
+  box-shadow: var(--vk-chisel-top), 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  clip-path: none !important;
+  border-radius: 2px !important;
+  color: var(--vk-gold-lit) !important;
+}
+
+.wallet-adapter-button:hover {
+  filter: brightness(1.08) !important;
+  border-top-color: var(--vk-gold) !important;
+}
+
+/* ── Level / screen effects — muted, no neon ── */
+.sl-level-burst {
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(154, 125, 78, 0.35),
+    transparent 55%
+  );
+}
+
+.sl-dungeon--flash {
+  animation: sl-screen-flash-gothic 0.65s ease-out;
+}
+
+@keyframes sl-screen-flash-gothic {
+  0% { filter: brightness(1); }
+  15% { filter: brightness(1.25) sepia(0.2); }
+  100% { filter: brightness(1); }
+}
+
+.um-settings-lang--active {
+  border-color: var(--vk-gold) !important;
+  background: rgba(58, 48, 32, 0.45) !important;
+  color: var(--vk-gold-lit) !important;
+}
+
+.um-settings-logout {
+  font-family: var(--font-display), "Cinzel", serif;
+  border: 2px solid var(--vk-blood-lit);
+  border-radius: 0;
+  background: linear-gradient(180deg, #3a2828, #1e1414);
+  color: #d4a8a0;
+}
+
+.um-panel__lead {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  color: var(--vk-parchment-dim);
+}

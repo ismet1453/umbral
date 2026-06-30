@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// UMBRAL v1 — FAZ F prototype rules.
+//
+// WARNING (v1): There is no Firebase Auth yet, so wallet ownership is NOT
+// verified server-side — a client could in theory write another wallet's doc.
+// This is acceptable for the demo leaderboard. Before a real launch, gate
+// writes behind Firebase Auth (custom token from a Solana signature) or a
+// Cloud Function, and change `allow ... if true` accordingly.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /leaderboard/{walletId} {
+      allow read: if true;
+      allow create, update: if
+        request.resource.data.keys().hasOnly(['hunterName', 'level', 'updatedAt'])
+        && request.resource.data.level is int
+        && request.resource.data.level >= 1
+        && request.resource.data.level <= 99
+        && request.resource.data.hunterName is string
+        && request.resource.data.hunterName.size() >= 2
+        && request.resource.data.hunterName.size() <= 24;
+      allow delete: if false;
+    }
+
+    match /profiles/{walletId} {
+      allow read: if true;
+      allow create, update: if
+        request.resource.data.keys().hasOnly(
+          ['hunterName', 'level', 'currentChapter', 'walletCoin', 'xp', 'updatedAt']
+        )
+        && request.resource.data.level is int
+        && request.resource.data.level >= 1
+        && request.resource.data.level <= 99
+        && request.resource.data.currentChapter is int
+        && request.resource.data.walletCoin is number
+        && request.resource.data.xp is number;
+      allow delete: if false;
+    }
+  }
+}
